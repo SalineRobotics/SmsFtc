@@ -72,7 +72,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  */
 
 @Autonomous(name="Pushbot: Settings", group="Pushbot")
-public class SalineReadSettings extends LinearOpMode {
+public class SalineWriteSettings extends LinearOpMode {
 
 
     /* Declare OpMode members. */

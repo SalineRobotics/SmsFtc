@@ -11,6 +11,9 @@ import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 @TeleOp
 public class ServoTest extends LinearOpMode {
 
@@ -24,10 +27,44 @@ public class ServoTest extends LinearOpMode {
         double          clawOffset      = 0;
         double          clawOffset2      = 0;
         boolean previousState = false;
-        final double    CLAW_SPEED      = 0.02 ;
+        final double    CLAW_SPEED      = 0.08 ;
+        boolean belt = false;
+        Date stamp = new Date();
         waitForStart();
 
         while (opModeIsActive()) {
+            Date loopDate = new Date();
+            long diff = loopDate.getTime() - stamp.getTime();
+
+            if (diff >= 50) {
+                stamp = new Date();
+                if (gamepad1.x) {
+                    clawOffset += CLAW_SPEED;
+                }
+
+                else if (gamepad1.b) {
+                    clawOffset -= CLAW_SPEED;
+                }
+
+                if (gamepad1.y) {
+                    clawOffset2 += CLAW_SPEED;
+                }
+
+                else if (gamepad1.a) {
+                    clawOffset2 -= CLAW_SPEED;
+                }
+
+
+                // Move both servos to new position.  Assume servos are mirror image of each other.
+                clawOffset = Range.clip(clawOffset, -0.5, 0.5);
+                clawOffset2 = Range.clip(clawOffset2, -0.5, 0.5);
+                servoTest2.setPosition(0.5 + clawOffset2);
+                servoTest.setPosition(0.5 + clawOffset);
+
+                telemetry.addData("Servo Position:", servoPosition);
+                telemetry.update();
+
+            }
             /*
             if (gamepad1.x) {
                 servoPosition = servoPosition + 0.1;
@@ -42,34 +79,7 @@ public class ServoTest extends LinearOpMode {
             }
             */
 
-            if (gamepad1.x && !previousState) {
-                previousState = true;
-                clawOffset += CLAW_SPEED;
-            }
 
-            else if (gamepad1.b && !previousState) {
-                previousState = true;
-                clawOffset -= CLAW_SPEED;
-            }
-
-            if (gamepad1.y && !previousState) {
-                previousState = true;
-                clawOffset2 += CLAW_SPEED;
-            }
-
-            else if (gamepad1.a && !previousState) {
-                previousState = true;
-                clawOffset2 -= CLAW_SPEED;
-            }
-
-            // Move both servos to new position.  Assume servos are mirror image of each other.
-            clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-            clawOffset2 = Range.clip(clawOffset2, -0.5, 0.5);
-            servoTest2.setPosition(0.5 + clawOffset2);
-            servoTest.setPosition(0.5 + clawOffset);
-
-            telemetry.addData("Servo Position:", servoPosition);
-            telemetry.update();
         }
 
     }
