@@ -22,10 +22,12 @@ public class ServoTest extends LinearOpMode {
         //servoTest = hardwareMap.get(, "left");
         Servo servoTest = hardwareMap.servo.get("claw");
         Servo servoTest2 = hardwareMap.servo.get("claw2");
+        Servo servoTest3 = hardwareMap.servo.get("claw3");
         double servoPosition = 0.5;
         servoTest.setPosition(servoPosition);
         double          clawOffset      = 0;
-        double          clawOffset2      = 0;
+        double          clawOffset2     = 0;
+        double          clawOffset3     =0;
         boolean previousState = false;
         final double    CLAW_SPEED      = 0.08 ;
         boolean belt = false;
@@ -52,6 +54,14 @@ public class ServoTest extends LinearOpMode {
 
                 else if (gamepad1.a) {
                     clawOffset2 -= CLAW_SPEED;
+                }
+
+                if (gamepad1.dpad_up) {
+                    clawOffset3 += CLAW_SPEED;
+                }
+
+                else if (gamepad1.dpad_down) {
+                    clawOffset3 -= CLAW_SPEED;
                 }
 
 
