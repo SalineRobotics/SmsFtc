@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.util.Range;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+@Disabled
 @TeleOp
 public class ServoTest extends LinearOpMode {
 
