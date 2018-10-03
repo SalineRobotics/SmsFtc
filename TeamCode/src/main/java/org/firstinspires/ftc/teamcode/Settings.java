@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
-import org.firstinspires.ftc.robotcore.internal.android.dex.Code;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,18 +14,8 @@ import java.io.File;
  */
 
 public class Settings {
-    public String settingName;
-    public int setting1;
-    public int setting2;
 
     private JSONObject jsonXSettings;
-
-
-    public void init() {
-        settingName = "AutonBlue.json";
-        setting1=5;
-        setting2=10;
-    }
 
     public void newSettings() {
         jsonXSettings = new JSONObject();
@@ -51,45 +40,32 @@ public class Settings {
         ReadWriteFile.writeFile(file, jsonXSettings.toString());
     }
 
-
-    public void ReadSettings() {
-        File file = AppUtil.getInstance().getSettingsFile(settingName);
-        String jsonString = ReadWriteFile.readFile(file);
-        Deserialize(jsonString);
-    }
-
-    public void WriteSettings(String mydata) {
-        File file = AppUtil.getInstance().getSettingsFile(settingName);
-        if (mydata == "") {
-            ReadWriteFile.writeFile(file, Serialize());
-        } else {
-            ReadWriteFile.writeFile(file, mydata);
-        }
-    }
-
-    public String Serialize() {
-        JSONObject jsonSettings = new JSONObject();
+    public void ReadSettings(String path) {
+        File file = AppUtil.getInstance().getSettingsFile(path);
         try {
-            jsonSettings.put("setting1" , setting1);
-            jsonSettings.put("setting2", setting2);
-            jsonSettings.put("setting123", 456);
+            jsonXSettings = new JSONObject(ReadWriteFile.readFile(file));
         }
         catch (JSONException e) {
-            //return default settings?
+            jsonXSettings = new JSONObject();
         }
-
-        return jsonSettings.toString();
     }
 
-    public void Deserialize(String settingString) {
-
+    public Double GetSetting(String name) {
         try {
-            JSONObject jsonSettings = new JSONObject(settingString);
-            setting1 = jsonSettings.getInt("setting2");
-            setting2 = jsonSettings.getInt("setting1");
+            return jsonXSettings.getDouble(name);
         }
         catch (JSONException e) {
-            //return default settings?
+            return 0.0;
         }
     }
+
+    public int GetIntSetting(String name) {
+        try {
+            return jsonXSettings.getInt(name);
+        }
+        catch (JSONException e) {
+            return 0;
+        }
+    }
+
 }
